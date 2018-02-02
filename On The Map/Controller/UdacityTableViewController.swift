@@ -80,7 +80,7 @@ class UdacityTableViewController: UITableViewController  {
                      NSAttributedStringKey.textEffect: NSAttributedString.TextEffectStyle.letterpressStyle as NSString
         ]
         
-        let string = NSAttributedString(string: text, attributes: attrs)
+         let string = NSAttributedString(string: text, attributes: attrs)
         label.attributedText = string
         
     }
@@ -111,7 +111,7 @@ class UdacityTableViewController: UITableViewController  {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! StudentTableViewCell
         let people = studentList[indexPath.row]
-        labelFunction(label: (cell.nameLabel)!, text: "\(people.firstName!) \(people.lastName!)", color: UIColor(red: 0.001, green: 0.706, blue:0.903, alpha: 1))
+        labelFunction(label: cell.nameLabel, text: "\(people.firstName ?? " first Name" ) \(people.lastName ?? " last Name" )", color: UIColor(red: 0.001, green: 0.706, blue:0.903, alpha: 1))
         cell.linkLabel?.text = "\(people.mediaURL!)"
         return cell
     }

@@ -26,7 +26,8 @@ final class StudentInformationArray: NSObject{
             }
             if let students = students {
                 myClass = students
-                self.studentList = myClass.filter { $0.latitude != nil || $0.longitude != nil || $0.mediaURL != nil}
+                self.studentList = myClass.flatMap{$0}//filter { $0.latitude != nil || $0.longitude != nil || $0.mediaURL != nil || ($0.lastName != nil) || ($0.firstName != nil)}
+                print(self.studentList)
               StudentInformationArray.removeSpinner(spinner: spinnerView)
             }
         }
