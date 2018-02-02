@@ -112,7 +112,7 @@ class UdacityTableViewController: UITableViewController  {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! StudentTableViewCell
         let people = studentList[indexPath.row]
         labelFunction(label: cell.nameLabel, text: "\(people.firstName ?? " first Name" ) \(people.lastName ?? " last Name" )", color: UIColor(red: 0.001, green: 0.706, blue:0.903, alpha: 1))
-        cell.linkLabel?.text = "\(people.mediaURL!)"
+        cell.linkLabel?.text = "\(people.mediaURL ?? "http://www.google.com")"
         return cell
     }
     

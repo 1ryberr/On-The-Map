@@ -31,7 +31,7 @@ class MapViewController: UIViewController{
     
      func annotationFunc(list:[StudentInformation]) {
         for item in list{
-            let studentAnnotation = StudentCallOut(coordinate:CLLocationCoordinate2DMake(item.latitude!,item.longitude!), title:"  \(item.firstName ?? "First Name") \(item.lastName ?? "Last Name")", mediaURL: "\(item.mediaURL!)")
+            let studentAnnotation = StudentCallOut(coordinate:CLLocationCoordinate2DMake(item.latitude!,item.longitude!), title:"  \(item.firstName ?? "First Name") \(item.lastName ?? "Last Name")", mediaURL: "\(item.mediaURL ?? "http://www.google.com")")
             self.map.addAnnotations([studentAnnotation])
         }
     }
