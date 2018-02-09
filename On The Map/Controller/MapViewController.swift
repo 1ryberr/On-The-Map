@@ -12,21 +12,24 @@ import MapKit
 class MapViewController: UIViewController{
     @IBOutlet weak var map: MKMapView!
     var sv : UIView!
-    var studentList :[StudentInformation]!
+    var studentList = [StudentInformation]()
     private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100"
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
         AppUtility.lockOrientation(.all)
         map.delegate = self
-        annotationFunc(list: studentList!)
-       
+        studentList.removeAll()
+        StudentInformationArray.info.getStudents(UDACITY_URL, sv: view)
+        studentList = StudentInformationArray.info.studentList
+        annotationFunc(list: studentList)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
+        
     }
     
      func annotationFunc(list:[StudentInformation]) {
@@ -36,12 +39,29 @@ class MapViewController: UIViewController{
         }
     }
     
+    func removePinCoordinates() {
+        let annotations = map.annotations
+        map.removeAnnotations(annotations)
+    }
+    
+    
     @IBAction func refreshMap(_ sender: Any) {
-        
+        removePinCoordinates()
         studentList.removeAll()
         StudentInformationArray.info.getStudents(UDACITY_URL, sv: view)
          studentList = StudentInformationArray.info.studentList
-        annotationFunc(list: studentList!)
+        annotationFunc(list: studentList)
+        
+        
+        if studentList.isEmpty{
+          StudentInformationArray.removeSpinner(spinner: sv)
+            let alert = UIAlertController(title: "Invalid Link!", message: "This pin doesnt have a valid URL.", preferredStyle: UIAlertControllerStyle.actionSheet)
+            
+            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+            })
+            alert.addAction(actionOK)
+            present(alert, animated: true, completion: nil)
+        }
     }
     
     @IBAction func logOut(_ sender: Any) {
@@ -163,7 +183,20 @@ class MapViewController: UIViewController{
         
     }
     
+    func turnOffActivityAndAlert(){
+        if studentList.isEmpty{
+            StudentInformationArray.removeSpinner(spinner: sv)
+            let alert = UIAlertController(title: "Invalid Link!", message: "This pin doesnt have a valid URL.", preferredStyle: UIAlertControllerStyle.actionSheet)
+            
+            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+            })
+            alert.addAction(actionOK)
+            present(alert, animated: true, completion: nil)
+        }
+    }
+    
 }
+
 
 extension MapViewController: MKMapViewDelegate {
     

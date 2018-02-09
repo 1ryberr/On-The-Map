@@ -11,14 +11,14 @@ final class StudentInformationArray: NSObject{
     static let info = StudentInformationArray()
     private override init() {}
     
-     var studentList :[StudentInformation]!
+     var studentList = [StudentInformation]()
     
     func getStudents(_ url: String, sv: UIView) {
        
         var spinnerView: UIView
         spinnerView = StudentInformationArray.displaySpinner(onView: sv)
         
-        var myClass : [StudentInformation]!
+        var myClass = [StudentInformation]()
         UdacityClient.sharedInstance.getStudentInfo(url: url){ (students, error) in
             guard (error == nil) else {
                 print("\(error!)")
@@ -26,8 +26,8 @@ final class StudentInformationArray: NSObject{
             }
             if let students = students {
                 myClass = students
-                self.studentList = myClass.filter { $0.latitude != nil || $0.longitude != nil}
-               
+          
+                self.studentList = Array(NSOrderedSet(array: myClass.filter { $0.latitude != nil || $0.longitude != nil})) as! [StudentInformation]
               StudentInformationArray.removeSpinner(spinner: spinnerView)
             }
         }

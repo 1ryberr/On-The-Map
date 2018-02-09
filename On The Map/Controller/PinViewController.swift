@@ -55,7 +55,6 @@ class PinViewController: UIViewController{
         labelFunction(label: whereTitle, text: "Where Are You", color: UIColor.gray)
         labelFunction(label: studyTitle, text: "studying", color: UIColor.black)
         labelFunction(label: todayTitle, text: "today.", color:UIColor.gray)
-        
         UdacityClient.sharedInstance.getPublicUserData()
     }
    

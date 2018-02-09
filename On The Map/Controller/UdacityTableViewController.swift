@@ -24,6 +24,9 @@ class UdacityTableViewController: UITableViewController  {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = true
+        StudentInformationArray.info.getStudents(UDACITY_URL, sv: view)
+        studentList = StudentInformationArray.info.studentList
+        studentTableView.reloadData()
     }
     
     func alertToLink(title: String, subtitle: String){

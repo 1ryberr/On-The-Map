@@ -49,6 +49,7 @@ class LoginViewController: UIViewController {
         view.endEditing(true)
     }
     
+    
     func getSessionID(userName: String, passWord: String){
         
         UdacityClient.sharedInstance.getSessionID(userName: userNameTextfield.text!, passWord: passwordTextfield.text!){(id, error) in
@@ -80,23 +81,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: (Any)?) {
-        
-        if segue.identifier == "mapsSegue" {
-            
-            let barViewController = segue.destination as! UITabBarController
-            
-            let nav = barViewController.viewControllers![0] as! UINavigationController
-            let mapController = nav.topViewController as! MapViewController
-            mapController.studentList = StudentInformationArray.info.studentList
-            
-            let nav1 = barViewController.viewControllers![1] as! UINavigationController
-            let tableViewController = nav1.topViewController as! UdacityTableViewController
-            tableViewController.studentList = StudentInformationArray.info.studentList
-            
-        }
-    }
     
     @IBAction func signUp(_ sender: Any) {
         
@@ -156,6 +140,7 @@ class LoginViewController: UIViewController {
         getSessionID(userName:  userNameTextfield.text!, passWord: passwordTextfield.text!)
         userNameTextfield.text = ""
         passwordTextfield.text = ""
+        
     }
     
     @IBAction func fBButton(_ sender: Any) {
