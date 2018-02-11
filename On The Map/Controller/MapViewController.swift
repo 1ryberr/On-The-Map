@@ -22,9 +22,12 @@ class MapViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         navigationController?.isNavigationBarHidden = true
-        loadStudentData()
+        if  StudentInformationArray.info.studentList.isEmpty{
+            loadStudentData()
+        }else{
+            annotationFunc(list: StudentInformationArray.info.studentList)
+        }
         
     }
     
@@ -45,7 +48,7 @@ class MapViewController: UIViewController {
     }
     
     func loadStudentData(){
-         sv = LoginViewController.displaySpinner(onView: self.view)
+        sv = LoginViewController.displaySpinner(onView: self.view)
         UdacityClient.sharedInstance.getStudentInfo(url: UDACITY_URL){ (students, error) in
             
             guard (error == nil) else {
@@ -68,11 +71,11 @@ class MapViewController: UIViewController {
                 myClass = students
                 myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
                 StudentInformationArray.info.studentList = myClass
-                 LoginViewController.removeSpinner(spinner: self.sv)
+                LoginViewController.removeSpinner(spinner: self.sv)
                 DispatchQueue.main.async {
-                     self.annotationFunc(list: StudentInformationArray.info.studentList)
+                    self.annotationFunc(list: StudentInformationArray.info.studentList)
                 }
-              
+                
                 
             }
         }
@@ -80,7 +83,7 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func refreshMap(_ sender: Any) {
-
+        
         self.removePinCoordinates()
         StudentInformationArray.info.studentList.removeAll()
         loadStudentData()
