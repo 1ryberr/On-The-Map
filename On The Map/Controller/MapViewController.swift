@@ -9,30 +9,31 @@ import Foundation
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController{
+class MapViewController: UIViewController {
     @IBOutlet weak var map: MKMapView!
     var sv : UIView!
-    var studentList = [StudentInformation]()
+   
+    
     private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100"
     
     override func viewDidLoad() {
         super.viewDidLoad()
        
         AppUtility.lockOrientation(.all)
-        map.delegate = self
-        studentList.removeAll()
-        StudentInformationArray.info.getStudents(UDACITY_URL, sv: view)
-        studentList = StudentInformationArray.info.studentList
-        annotationFunc(list: studentList)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
-        
+         loadStudentData()
     }
     
-     func annotationFunc(list:[StudentInformation]) {
+    override func viewWillDisappear(_ animated: Bool) {
+        removePinCoordinates()
+    }
+    
+    func annotationFunc(list:[StudentInformation]) {
         for item in list{
             let studentAnnotation = StudentCallOut(coordinate:CLLocationCoordinate2DMake(item.latitude!,item.longitude!), title:"  \(item.firstName ?? "First Name") \(item.lastName ?? "Last Name")", mediaURL: "\(item.mediaURL ?? "http://www.google.com")")
             self.map.addAnnotations([studentAnnotation])
@@ -44,24 +45,45 @@ class MapViewController: UIViewController{
         map.removeAnnotations(annotations)
     }
     
+    func loadStudentData(){
+        
+        UdacityClient.sharedInstance.getStudentInfo(url: UDACITY_URL){ (students, error) in
+            guard (error == nil) else {
+                print("\(error!)")
+                performUIUpdatesOnMain {
+                    
+                    let alert = UIAlertController(title: "Network Error", message: "Check Network Connection!", preferredStyle: UIAlertControllerStyle.actionSheet)
+                    
+                    let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+                    })
+                    alert.addAction(actionOK)
+                    self.present(alert, animated: true, completion: nil)
+                }
+                
+                return
+            }
+            
+            if let students = students {
+                var myClass = [StudentInformation]()
+                myClass = students
+                myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
+                StudentInformationArray.info.studentList = myClass
+                
+                DispatchQueue.main.async {
+                     self.annotationFunc(list: StudentInformationArray.info.studentList)
+                }
+              
+                
+            }
+        }
+        
+    }
     
     @IBAction func refreshMap(_ sender: Any) {
-        removePinCoordinates()
-        studentList.removeAll()
-        StudentInformationArray.info.getStudents(UDACITY_URL, sv: view)
-         studentList = StudentInformationArray.info.studentList
-        annotationFunc(list: studentList)
-        
-        
-        if studentList.isEmpty{
-          StudentInformationArray.removeSpinner(spinner: sv)
-            let alert = UIAlertController(title: "Invalid Link!", message: "This pin doesnt have a valid URL.", preferredStyle: UIAlertControllerStyle.actionSheet)
-            
-            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
-            })
-            alert.addAction(actionOK)
-            present(alert, animated: true, completion: nil)
-        }
+
+        self.removePinCoordinates()
+        StudentInformationArray.info.studentList.removeAll()
+        loadStudentData()
     }
     
     @IBAction func logOut(_ sender: Any) {
@@ -132,11 +154,11 @@ class MapViewController: UIViewController{
         
     }
     
-   func sendToWebView(_ customAnnotation: StudentCallOut) {
-    
+    func sendToWebView(_ customAnnotation: StudentCallOut) {
+        
         
         if canOpenURL(string: customAnnotation.subtitle!){
-    
+            
             self.alertToLink(title: customAnnotation.title!, subtitle: customAnnotation.subtitle!)
         }else{
             
@@ -148,6 +170,7 @@ class MapViewController: UIViewController{
             present(alert, animated: true, completion: nil)
             
         }
+        
     }
     
     func canOpenURL(string: String?) -> Bool {
@@ -158,7 +181,7 @@ class MapViewController: UIViewController{
         let predicate = NSPredicate(format:"SELF MATCHES %@", argumentArray:[regEx])
         return predicate.evaluate(with: string)
     }
-
+    
     
     func alertToLink(title: String, subtitle: String){
         
@@ -183,20 +206,7 @@ class MapViewController: UIViewController{
         
     }
     
-    func turnOffActivityAndAlert(){
-        if studentList.isEmpty{
-            StudentInformationArray.removeSpinner(spinner: sv)
-            let alert = UIAlertController(title: "Invalid Link!", message: "This pin doesnt have a valid URL.", preferredStyle: UIAlertControllerStyle.actionSheet)
-            
-            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
-            })
-            alert.addAction(actionOK)
-            present(alert, animated: true, completion: nil)
-        }
-    }
-    
 }
-
 
 extension MapViewController: MKMapViewDelegate {
     
@@ -233,11 +243,12 @@ extension MapViewController: MKMapViewDelegate {
         customView.subtitleLabel.text = customAnnotation.subtitle
         labelFunction(label: customView.titleLabel, text: customAnnotation.title!, color: .white)
         view.addSubview(customView)
-    
+        
         map.showAnnotations([customAnnotation], animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.3){
             self.addBounceAnimationToView(view: customView)
         }
+        
         if view.isSelected {
             sendToWebView(customAnnotation)
         }

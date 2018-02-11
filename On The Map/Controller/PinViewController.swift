@@ -47,7 +47,7 @@ class PinViewController: UIViewController{
         textFieldFunction(textField: linkTextField, placeholder: enterLink)
         textFieldFunction(textField: localTextField, placeholder: enterLocation )
         firstViewIsHidden(false)
-        map.delegate = self
+    
         checkIfFirstLaunch(key: "objectId")
         objectId = UserDefaults.standard.string(forKey: "objectId")!
         dict = ["firstName": firstName,"lastName": lastName, "objectId": objectId]
@@ -56,6 +56,7 @@ class PinViewController: UIViewController{
         labelFunction(label: studyTitle, text: "studying", color: UIColor.black)
         labelFunction(label: todayTitle, text: "today.", color:UIColor.gray)
         UdacityClient.sharedInstance.getPublicUserData()
+        
     }
    
     
@@ -70,7 +71,7 @@ class PinViewController: UIViewController{
     }
     
     func getMapByAddress(_ locationMap: MKMapView?, address: String?){
-        sv =  StudentInformationArray.displaySpinner(onView: self.view)
+        sv =  LoginViewController.displaySpinner(onView: self.view)
         firstViewIsHidden(true)
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address!, completionHandler: {(placemarks, error) -> Void in
@@ -84,14 +85,14 @@ class PinViewController: UIViewController{
                 locationMap?.addAnnotation(myInfo)
                 self.dict["latitude"] = "\(self.coordinates.latitude)"
                 self.dict["longitude"] = "\(self.coordinates.longitude)"
-               StudentInformationArray.removeSpinner(spinner: self.sv)
+               LoginViewController.removeSpinner(spinner: self.sv)
                 
             } else {
                 
                 let alert = UIAlertController(title: "Error", message: "Geolocation has failed! Try again later.", preferredStyle: UIAlertControllerStyle.alert)
                 
                 let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
-                    StudentInformationArray.removeSpinner(spinner: self.sv)
+                    LoginViewController.removeSpinner(spinner: self.sv)
                     self.dismiss(animated: true, completion: {})
                 })
                 alert.addAction(actionOK)
@@ -186,17 +187,17 @@ class PinViewController: UIViewController{
     
     
     func updateStudentLocation(url: String, dict: [String:String]){
-        sv = StudentInformationArray.displaySpinner(onView: self.view)
+        sv = LoginViewController.displaySpinner(onView: self.view)
         let newUrl = url + "/" + dict["objectId"]!
         UdacityClient.sharedInstance.updateStudentLocation(url: newUrl, jsonBodyString: UdacityClient.sharedInstance.jsonBodyString(dict: dict)){(data, error) in
             guard (error == nil) else {
                 performUIUpdatesOnMain({
-                    StudentInformationArray.removeSpinner(spinner: self.sv)
+                   LoginViewController.removeSpinner(spinner: self.sv)
                   self.alertDialog(title: "Error", message: "Network Error! Try again later.", buttonTitle: "OK")
                 })
                 return
             }
-            StudentInformationArray.removeSpinner(spinner: self.sv)
+            LoginViewController.removeSpinner(spinner: self.sv)
             if let datum = data{
                 print(datum)
             }else {
@@ -210,12 +211,12 @@ class PinViewController: UIViewController{
     }
     
     func postStudentLocation(url:String, dict: [String:String]){
-        sv = StudentInformationArray.displaySpinner(onView: self.view)
+        sv = LoginViewController.displaySpinner(onView: self.view)
         UdacityClient.sharedInstance.postStudentLocation(url: url, jsonBodyString: UdacityClient.sharedInstance.jsonBodyString(dict: dict)){ (objectId, error) in
             guard (error == nil) else {
                 performUIUpdatesOnMain({
                     self.alertDialog(title: "Error", message: "Network Error! Try again later.", buttonTitle: "OK")
-                   StudentInformationArray.removeSpinner(spinner: self.sv)
+                   LoginViewController.removeSpinner(spinner: self.sv)
                     
                 })
                 return
@@ -224,7 +225,7 @@ class PinViewController: UIViewController{
                 self.objectId = objectId
                 UserDefaults.standard.set(objectId, forKey: "objectId")
                 performUIUpdatesOnMain({
-                   StudentInformationArray.removeSpinner(spinner: self.sv)
+                   LoginViewController.removeSpinner(spinner: self.sv)
                 })
             }
         }

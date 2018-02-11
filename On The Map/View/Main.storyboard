@@ -66,6 +66,9 @@
                                         <exclude reference="zkr-vZ-kT8"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="O2W-KK-4QO"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="18l-Jc-FKh">
                                 <rect key="frame" x="20" y="504" width="374" height="40"/>
@@ -88,6 +91,9 @@
                                         <include reference="deq-4D-zEc"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="vIp-qe-HoF"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H8u-Vr-Rkx">
                                 <rect key="frame" x="20" y="552" width="374" height="40"/>
@@ -568,13 +574,13 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="ih6-hk-AdX">
-                                            <rect key="frame" x="76" y="17" width="444" height="21"/>
+                                            <rect key="frame" x="76" y="17" width="258" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0034430453090000001" green="0.70233589409999997" blue="0.89534300570000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="link" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emd-ac-gG3">
-                                            <rect key="frame" x="76" y="35" width="444" height="23"/>
+                                            <rect key="frame" x="76" y="35" width="258" height="23"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="23" id="L3p-Ip-WIN"/>
                                             </constraints>
@@ -674,6 +680,9 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Zff-dk-KJM">
                                 <rect key="frame" x="0.0" y="98" width="414" height="589"/>
+                                <connections>
+                                    <outlet property="delegate" destination="20P-O5-22K" id="f5t-92-nGc"/>
+                                </connections>
                             </mapView>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vcK-GN-PbQ">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="78"/>

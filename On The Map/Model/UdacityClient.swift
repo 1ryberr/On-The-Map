@@ -18,6 +18,7 @@ class UdacityClient: NSObject{
         var request = URLRequest(url: URL(string: url)!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.timeoutInterval = 10.0
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
             
@@ -73,6 +74,9 @@ class UdacityClient: NSObject{
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonBodyString.data(using: .utf8)
+        request.timeoutInterval = 10.0
+        
+        
         
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
@@ -129,6 +133,9 @@ class UdacityClient: NSObject{
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonBodyString.data(using: .utf8)
+        request.timeoutInterval = 10.0
+        
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
             func sendError(_ error: String) {
@@ -153,6 +160,8 @@ class UdacityClient: NSObject{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody =  "{\"udacity\": {\"username\": \(uName),\"password\": \(pword)}}".data(using: .utf8)
+        request.timeoutInterval = 10.0
+        
         
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
@@ -203,6 +212,8 @@ class UdacityClient: NSObject{
     func logOut(completionHandlerForPOST: @escaping (_ parsedResult: [String: AnyObject]?, _ error: NSError?)-> Void) -> URLSessionDataTask {
         var request = URLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
         request.httpMethod = "DELETE"
+        request.timeoutInterval = 10.0
+        
         var xsrfCookie: HTTPCookie? = nil
         let sharedCookieStorage = HTTPCookieStorage.shared
         for cookie in sharedCookieStorage.cookies! {
@@ -238,7 +249,9 @@ class UdacityClient: NSObject{
     }
     
     func getPublicUserData(){
-        let request = URLRequest(url: URL(string: "https://www.udacity.com/api/users/1ryber@gmail.com")!)
+        
+        var request = URLRequest(url: URL(string: "https://www.udacity.com/api/users/1ryber@gmail.com")!)
+            request.timeoutInterval = 10.0
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
             if error != nil { // Handle error...
@@ -246,9 +259,10 @@ class UdacityClient: NSObject{
             }
             let range = Range(5..<data!.count)
             let newData = data?.subdata(in: range) /* subset response data! */
-            print(String(data: newData!, encoding: .utf8)!)
+          //  print(String(data: newData!, encoding: .utf8)!)
         }
         task.resume()
+        
     }
     
     func jsonBodyString(dict: [String: String]) -> String{

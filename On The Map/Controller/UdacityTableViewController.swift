@@ -12,21 +12,55 @@ class UdacityTableViewController: UITableViewController  {
     @IBOutlet var studentTableView: UITableView!
     let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation?order=-updatedAt"
     let refreshControls = UIRefreshControl()
-    var studentList: [StudentInformation]!
     var sv : UIView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         studentTableView.backgroundView = UIImageView(image: UIImage(named: "logo-u"))
+        studentTableView.reloadData()
         refresh()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = true
-        StudentInformationArray.info.getStudents(UDACITY_URL, sv: view)
-        studentList = StudentInformationArray.info.studentList
-        studentTableView.reloadData()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        
+    }
+    func loadStudentData(){
+        
+        UdacityClient.sharedInstance.getStudentInfo(url: UDACITY_URL){ (students, error) in
+            guard (error == nil) else {
+                print("\(error!)")
+                performUIUpdatesOnMain {
+                    
+                    let alert = UIAlertController(title: "Network Error", message: "Check Network Connection!", preferredStyle: UIAlertControllerStyle.actionSheet)
+                    
+                    let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+                    })
+                    alert.addAction(actionOK)
+                    self.present(alert, animated: true, completion: nil)
+                }
+                
+                return
+            }
+            
+            if let students = students {
+                var myClass = [StudentInformation]()
+                myClass = students
+                myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
+                DispatchQueue.main.async {
+                   StudentInformationArray.info.studentList = myClass
+                    self.studentTableView.reloadData()
+                    
+                }
+                
+                
+            }
+        }
+        
     }
     
     func alertToLink(title: String, subtitle: String){
@@ -52,6 +86,7 @@ class UdacityTableViewController: UITableViewController  {
     }
     
     func canOpenURL(string: String?) -> Bool {
+        
         guard let urlString = string else {return false}
         guard let url = NSURL(string: urlString) else {return false}
         if !UIApplication.shared.canOpenURL(url as URL) {return false}
@@ -63,14 +98,14 @@ class UdacityTableViewController: UITableViewController  {
     func refresh(){
         
         refreshControls.addTarget(nil, action: #selector(didRefresh), for: .valueChanged)
-       refreshControls.tintColor = UIColor.gray
+        refreshControls.tintColor = UIColor.gray
         studentTableView.refreshControl = refreshControls
     }
     
     @objc func didRefresh(event: UIControlEvents) {
-        studentList.removeAll()
-        StudentInformationArray.info.getStudents(UDACITY_URL, sv: view)
-        studentList = StudentInformationArray.info.studentList
+        
+        StudentInformationArray.info.studentList.removeAll()
+        loadStudentData()
         studentTableView.reloadData()
         refreshControls.endRefreshing()
         
@@ -107,15 +142,16 @@ class UdacityTableViewController: UITableViewController  {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return studentList.count
+        return StudentInformationArray.info.studentList.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! StudentTableViewCell
-        let people = studentList[indexPath.row]
+        let people = StudentInformationArray.info.studentList[indexPath.row]
         labelFunction(label: cell.nameLabel, text: "\(people.firstName ?? " first Name" ) \(people.lastName ?? " last Name" )", color: UIColor(red: 0.001, green: 0.706, blue:0.903, alpha: 1))
         cell.linkLabel?.text = "\(people.mediaURL ?? "http://www.google.com")"
+        
         return cell
     }
     
@@ -126,7 +162,7 @@ class UdacityTableViewController: UITableViewController  {
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         
-        let people = studentList[indexPath.row]
+        let people = StudentInformationArray.info.studentList[indexPath.row]
         sendToWebView(people)
         
     }

@@ -120,6 +120,7 @@
 		F46935051FEA92400080C594 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F433B8541FEFEB6100C1A344 /* StudentCallOutView.swift */,
 				F47043271FEEB3AB00102127 /* StudentTableViewCell.swift */,
 				F433B84A1FEF177100C1A344 /* StudentCallOut.swift */,
 				F47781F61FD18BFA00F96F85 /* UdacityClient.swift */,
@@ -132,7 +133,6 @@
 		F46935061FEA92C50080C594 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				F433B8541FEFEB6100C1A344 /* StudentCallOutView.swift */,
 				F433B8561FF0075D00C1A344 /* CustomCallOutView.xib */,
 				F42B3D4D1FF754C000F3520E /* Main.storyboard */,
 				F4E0E1A11FC90DF20052FCCB /* LaunchScreen.storyboard */,
@@ -180,8 +180,8 @@
 			isa = PBXGroup;
 			children = (
 				F4E0E1A41FC90DF20052FCCB /* Info.plist */,
-				F46935051FEA92400080C594 /* Model */,
 				F46935061FEA92C50080C594 /* View */,
+				F46935051FEA92400080C594 /* Model */,
 				F46935081FEA92F80080C594 /* Controller */,
 			);
 			path = "On The Map";

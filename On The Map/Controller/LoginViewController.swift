@@ -23,22 +23,18 @@ class LoginViewController: UIViewController {
    
     
     override func viewWillAppear(_ animated: Bool) {
-        StudentInformationArray.info.getStudents(UDACITY_URL, sv: view)
         keyBoardHideandShow()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
         AppUtility.lockOrientation(.portrait)
         authenticateUser()
         
         if (FBSDKAccessToken.current() != nil) {
             performSegue(withIdentifier:"mapsSegue", sender: nil)
         }
-        
-        self.passwordTextfield.delegate = self
-        self.userNameTextfield.delegate = self
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -62,13 +58,11 @@ class LoginViewController: UIViewController {
                     })
                 }else{
                     performUIUpdatesOnMain {
-                        
                      self.acountLabel.text = "Check internet connection"
-                        
                     }
-                    StudentInformationArray.removeSpinner(spinner: self.sv)
+                  LoginViewController.removeSpinner(spinner: self.sv)
                 }
-                StudentInformationArray.removeSpinner(spinner: self.sv)
+              LoginViewController.removeSpinner(spinner: self.sv)
                 return
             }
             if !(id?.isEmpty)!{
@@ -76,7 +70,7 @@ class LoginViewController: UIViewController {
                      DispatchQueue.main.async {
                         self.performSegue(withIdentifier:"mapsSegue", sender: nil)
                 }
-                StudentInformationArray.removeSpinner(spinner: self.sv)
+              LoginViewController.removeSpinner(spinner: self.sv)
             }
         }
     }
@@ -136,7 +130,7 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginButton(_ sender: Any) {
         
-        sv = StudentInformationArray.displaySpinner(onView: self.view)
+        sv = LoginViewController.displaySpinner(onView: self.view)
         getSessionID(userName:  userNameTextfield.text!, passWord: passwordTextfield.text!)
         userNameTextfield.text = ""
         passwordTextfield.text = ""
@@ -215,5 +209,30 @@ extension LoginViewController {
     }
     
 }
-
-
+extension LoginViewController {
+    
+    class func displaySpinner(onView : UIView) -> UIView {
+        let spinnerView = UIView.init(frame: onView.bounds)
+        spinnerView.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        
+        let ai = UIActivityIndicatorView.init(activityIndicatorStyle: .whiteLarge)
+        ai.startAnimating()
+        ai.center = spinnerView.center
+        performUIUpdatesOnMain {
+            spinnerView.addSubview(ai)
+            onView.addSubview(spinnerView)
+        }
+        
+        return spinnerView
+    }
+    
+    class func removeSpinner(spinner :UIView) {
+        
+        performUIUpdatesOnMain {
+            spinner.removeFromSuperview()
+            
+        }
+    }
+    
+    
+}
