@@ -53,6 +53,7 @@ class MapViewController: UIViewController {
             
             guard (error == nil) else {
                 print("\(error!)")
+                 LoginViewController.removeSpinner(spinner: self.sv)
                 performUIUpdatesOnMain {
                     
                     let alert = UIAlertController(title: "Network Error", message: "Check Network Connection!", preferredStyle: UIAlertControllerStyle.actionSheet)

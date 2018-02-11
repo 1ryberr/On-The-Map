@@ -35,6 +35,8 @@ class UdacityTableViewController: UITableViewController  {
         UdacityClient.sharedInstance.getStudentInfo(url: UDACITY_URL){ (students, error) in
             guard (error == nil) else {
                 print("\(error!)")
+                
+                LoginViewController.removeSpinner(spinner: self.sv)
                 performUIUpdatesOnMain {
                     
                     let alert = UIAlertController(title: "Network Error", message: "Check Network Connection!", preferredStyle: UIAlertControllerStyle.actionSheet)
@@ -53,7 +55,7 @@ class UdacityTableViewController: UITableViewController  {
                 myClass = students
                 myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
                 DispatchQueue.main.async {
-                   StudentInformationArray.info.studentList = myClass
+                    StudentInformationArray.info.studentList = myClass
                     self.studentTableView.reloadData()
                     
                 }
@@ -95,7 +97,7 @@ class UdacityTableViewController: UITableViewController  {
         let predicate = NSPredicate(format:"SELF MATCHES %@", argumentArray:[regEx])
         return predicate.evaluate(with: string)
     }
-
+    
     func refresh(){
         
         refreshControls.addTarget(nil, action: #selector(didRefresh), for: .valueChanged)
@@ -119,13 +121,13 @@ class UdacityTableViewController: UITableViewController  {
                      NSAttributedStringKey.textEffect: NSAttributedString.TextEffectStyle.letterpressStyle as NSString
         ]
         
-         let string = NSAttributedString(string: text, attributes: attrs)
+        let string = NSAttributedString(string: text, attributes: attrs)
         label.attributedText = string
         
     }
     
-     func sendToWebView(_ studentInfo: StudentInformation) {
-
+    func sendToWebView(_ studentInfo: StudentInformation) {
+        
         if canOpenURL(string: studentInfo.mediaURL!){
             
             self.alertToLink(title: "\(studentInfo.firstName!) \(studentInfo.lastName!)", subtitle:"\(studentInfo.mediaURL!)")
@@ -181,8 +183,8 @@ class UdacityTableViewController: UITableViewController  {
             
             let controller: PinViewController
             controller = self.storyboard?.instantiateViewController(withIdentifier: "PinViewController") as! PinViewController
-//            controller.firstName = firstName
-        //    controller.lastName = lastName
+            //            controller.firstName = firstName
+            //    controller.lastName = lastName
             self.present(controller, animated: true, completion: nil)
             
         })
