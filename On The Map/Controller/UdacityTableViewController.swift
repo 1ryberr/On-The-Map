@@ -21,6 +21,7 @@ class UdacityTableViewController: UITableViewController  {
         studentTableView.backgroundView = UIImageView(image: UIImage(named: "logo-u"))
         studentTableView.reloadData()
         refresh()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -20,6 +20,7 @@ class LoginViewController: UIViewController {
     private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100"
     var keyboardOnScreen = false
     var sv: UIView!
+    
    
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,7 +45,7 @@ class LoginViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
-    
+
     
     func getSessionID(userName: String, passWord: String){
         
@@ -69,6 +70,8 @@ class LoginViewController: UIViewController {
                 
                      DispatchQueue.main.async {
                         self.performSegue(withIdentifier:"mapsSegue", sender: nil)
+                       StudentInformationArray.info.sessionID = id
+                        
                 }
               LoginViewController.removeSpinner(spinner: self.sv)
             }

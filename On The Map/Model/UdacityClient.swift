@@ -250,7 +250,7 @@ class UdacityClient: NSObject{
     
     func getPublicUserData(){
         
-        var request = URLRequest(url: URL(string: "https://www.udacity.com/api/users/1ryber@gmail.com")!)
+        var request = URLRequest(url: URL(string: "https://www.udacity.com/api/users/1549851310_dd50d0707039a2a7501657d908ca1555")!)
             request.timeoutInterval = 10.0
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in

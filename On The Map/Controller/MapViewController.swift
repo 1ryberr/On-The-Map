@@ -12,21 +12,20 @@ import MapKit
 class MapViewController: UIViewController {
     @IBOutlet weak var map: MKMapView!
     var sv : UIView!
-   
-    
     private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
         AppUtility.lockOrientation(.all)
-        
+        print(StudentInformationArray.info.sessionID)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         navigationController?.isNavigationBarHidden = true
-         loadStudentData()
+        loadStudentData()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -46,8 +45,9 @@ class MapViewController: UIViewController {
     }
     
     func loadStudentData(){
-        
+         sv = LoginViewController.displaySpinner(onView: self.view)
         UdacityClient.sharedInstance.getStudentInfo(url: UDACITY_URL){ (students, error) in
+            
             guard (error == nil) else {
                 print("\(error!)")
                 performUIUpdatesOnMain {
@@ -68,7 +68,7 @@ class MapViewController: UIViewController {
                 myClass = students
                 myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
                 StudentInformationArray.info.studentList = myClass
-                
+                 LoginViewController.removeSpinner(spinner: self.sv)
                 DispatchQueue.main.async {
                      self.annotationFunc(list: StudentInformationArray.info.studentList)
                 }
@@ -95,35 +95,10 @@ class MapViewController: UIViewController {
     
     @IBAction func pinMyLocation(_ sender: Any) {
         
-        let alert = UIAlertController(title: "Who are you?", message: "First and last name required.", preferredStyle: UIAlertControllerStyle.alert)
+        let controller: PinViewController
+        controller = self.storyboard?.instantiateViewController(withIdentifier: "PinViewController") as! PinViewController
+        self.present(controller, animated: true, completion: nil)
         
-        let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {action in })
-        
-        let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
-            
-            let firstName = (alert.textFields![0] as UITextField).text!
-            let lastName = (alert.textFields![1] as UITextField).text!
-            
-            let controller: PinViewController
-            controller = self.storyboard?.instantiateViewController(withIdentifier: "PinViewController") as! PinViewController
-            controller.firstName = firstName
-            controller.lastName =  lastName
-            self.present(controller, animated: true, completion: nil)
-            
-        })
-        
-        alert.addAction(actionCancel)
-        alert.addAction(actionOK)
-        alert.addTextField(configurationHandler: {textField in
-            textField.backgroundColor = UIColor.white
-            textField.placeholder = "First Name"
-        })
-        alert.addTextField(configurationHandler: {textfield in
-            textfield.backgroundColor = UIColor.white
-            textfield.placeholder = "Last Name"
-        })
-        
-        self.present(alert, animated: true, completion: nil)
     }
     
     func labelFunction(label: UILabel, text: String, color: UIColor) {
