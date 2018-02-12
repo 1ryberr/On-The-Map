@@ -10,8 +10,6 @@ import UIKit
 import FBSDKLoginKit
 import LocalAuthentication
 
-
-
 class LoginViewController: UIViewController {
     
     @IBOutlet weak var passwordTextfield: UITextField!
@@ -20,8 +18,6 @@ class LoginViewController: UIViewController {
     private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100"
     var keyboardOnScreen = false
     var sv: UIView!
-    
-   
     
     override func viewWillAppear(_ animated: Bool) {
         keyBoardHideandShow()
@@ -212,12 +208,13 @@ extension LoginViewController {
     }
     
 }
+
 extension LoginViewController {
     
     class func displaySpinner(onView : UIView) -> UIView {
-        let spinnerView = UIView.init(frame: onView.bounds)
-        spinnerView.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
         
+        let spinnerView = UIView.init(frame: onView.bounds)
+        spinnerView.backgroundColor = UIColor(red: 0.001, green: 0.706, blue:0.903, alpha: 0.5)
         let ai = UIActivityIndicatorView.init(activityIndicatorStyle: .whiteLarge)
         ai.startAnimating()
         ai.center = spinnerView.center

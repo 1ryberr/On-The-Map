@@ -38,7 +38,7 @@ class PinViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
          print("the sessionID\(StudentInformationArray.info.sessionID)")
-        getPublicUserData()
+  
         
         customizeView(view: submitButton, cornerRadius: 4, borderWidth: 2)
         customizeView(view: findButton, cornerRadius: 4, borderWidth: 2)
@@ -231,23 +231,6 @@ class PinViewController: UIViewController{
                 })
             }
         }
-    }
-    
-    func getPublicUserData(){
-        
-        var request = URLRequest(url: URL(string: "https://www.udacity.com/api/users/StudentInformationArray.info.sessionID")!)
-        request.timeoutInterval = 10.0
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            if error != nil { // Handle error...
-                return
-            }
-            let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range) /* subset response data! */
-             print(String(data: newData!, encoding: .utf8)!)
-        }
-        task.resume()
-        
     }
     
     func addBounceAnimationToView(view: UIView){

@@ -36,7 +36,8 @@ class MapViewController: UIViewController {
     }
     
     func annotationFunc(list:[StudentInformation]) {
-        for item in list{
+        
+        for item in list where item.latitude != nil{
             let studentAnnotation = StudentCallOut(coordinate:CLLocationCoordinate2DMake(item.latitude!,item.longitude!), title:"  \(item.firstName ?? "First Name") \(item.lastName ?? "Last Name")", mediaURL: "\(item.mediaURL ?? "http://www.google.com")")
             self.map.addAnnotations([studentAnnotation])
         }
@@ -71,13 +72,11 @@ class MapViewController: UIViewController {
                 var myClass = [StudentInformation]()
                 myClass = students
                 myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
-                StudentInformationArray.info.studentList = myClass
+                StudentInformationArray.info.studentList = myClass.flatMap{$0}
                 LoginViewController.removeSpinner(spinner: self.sv)
                 DispatchQueue.main.async {
                     self.annotationFunc(list: StudentInformationArray.info.studentList)
                 }
-                
-                
             }
         }
         

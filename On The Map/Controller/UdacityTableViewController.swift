@@ -35,7 +35,6 @@ class UdacityTableViewController: UITableViewController  {
         UdacityClient.sharedInstance.getStudentInfo(url: UDACITY_URL){ (students, error) in
             guard (error == nil) else {
                 print("\(error!)")
-                
                 LoginViewController.removeSpinner(spinner: self.sv)
                 performUIUpdatesOnMain {
                     
@@ -152,9 +151,8 @@ class UdacityTableViewController: UITableViewController  {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! StudentTableViewCell
         let people = StudentInformationArray.info.studentList[indexPath.row]
-        labelFunction(label: cell.nameLabel, text: "\(people.firstName ?? " first Name" ) \(people.lastName ?? " last Name" )", color: UIColor(red: 0.001, green: 0.706, blue:0.903, alpha: 1))
+        labelFunction(label: cell.nameLabel, text: "\(people.firstName ?? "First Name" ) \(people.lastName ?? "Last Name" )", color: UIColor(red: 0.001, green: 0.706, blue:0.903, alpha: 1))
         cell.linkLabel?.text = "\(people.mediaURL ?? "http://www.google.com")"
-        
         return cell
     }
     
@@ -183,8 +181,8 @@ class UdacityTableViewController: UITableViewController  {
             
             let controller: PinViewController
             controller = self.storyboard?.instantiateViewController(withIdentifier: "PinViewController") as! PinViewController
-            //            controller.firstName = firstName
-            //    controller.lastName = lastName
+            controller.firstName = firstName
+            controller.lastName = lastName
             self.present(controller, animated: true, completion: nil)
             
         })
