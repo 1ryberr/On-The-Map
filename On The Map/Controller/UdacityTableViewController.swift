@@ -181,8 +181,8 @@ class UdacityTableViewController: UITableViewController  {
             
             let controller: PinViewController
             controller = self.storyboard?.instantiateViewController(withIdentifier: "PinViewController") as! PinViewController
-            controller.firstName = firstName
-            controller.lastName = lastName
+         //   controller.firstName = firstName
+         //   controller.lastName = lastName
             self.present(controller, animated: true, completion: nil)
             
         })

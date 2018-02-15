@@ -23,23 +23,21 @@ class PinViewController: UIViewController{
     
    
     private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation"
+    private let UDACITY_STUDENT_URL = "https://www.udacity.com/api/users/\(StudentInformationArray.info.userName!)"
     var enterLocation = "Enter Your Location Here"
     var enterLink = "Enter a Link to Share Here"
     var coordinates = CLLocationCoordinate2D()
     var place: String = ""
     var objectId: String = ""
     var link : String = ""
-    var firstName : String = ""
-    var lastName : String = ""
+    var name : (String, String)!
     var dict = [String: String]()
     var sv: UIView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         print("the sessionID\(StudentInformationArray.info.sessionID)")
-  
-        
+         userInfo()
         customizeView(view: submitButton, cornerRadius: 4, borderWidth: 2)
         customizeView(view: findButton, cornerRadius: 4, borderWidth: 2)
         customizeView(view: firstView, cornerRadius: 6, borderWidth: 7)
@@ -52,14 +50,15 @@ class PinViewController: UIViewController{
     
         checkIfFirstLaunch(key: "objectId")
         objectId = UserDefaults.standard.string(forKey: "objectId")!
-        dict = ["firstName": firstName,"lastName": lastName, "objectId": objectId]
+        dict = ["objectId": objectId]
         
         labelFunction(label: whereTitle, text: "Where Are You", color: UIColor.gray)
         labelFunction(label: studyTitle, text: "studying", color: UIColor.black)
         labelFunction(label: todayTitle, text: "today.", color:UIColor.gray)
-        UdacityClient.sharedInstance.getPublicUserData()
-        
+       
     }
+   
+    
    
     
     func customizeView(view: UIView, cornerRadius: Int, borderWidth: Int){
@@ -83,7 +82,7 @@ class PinViewController: UIViewController{
                 let region = MKCoordinateRegion(center: (validPlacemark.location?.coordinate)!, span: span)
                 locationMap?.setRegion(region, animated: true)
                 
-                 let myInfo = StudentCallOut(coordinate:CLLocationCoordinate2DMake(self.coordinates.latitude,self.coordinates.longitude), title:" \(self.firstName) \(self.lastName)", mediaURL: "The url you enter goes here!")
+                 let myInfo = StudentCallOut(coordinate:CLLocationCoordinate2DMake(self.coordinates.latitude,self.coordinates.longitude), title:" \(self.dict["firstName"]!) \(self.dict["lastName"]!)", mediaURL: "The url you enter goes here!")
                 locationMap?.addAnnotation(myInfo)
                 self.dict["latitude"] = "\(self.coordinates.latitude)"
                 self.dict["longitude"] = "\(self.coordinates.longitude)"
@@ -187,6 +186,21 @@ class PinViewController: UIViewController{
         self.present(controller, animated: true)
     }
     
+    func userInfo(){
+        UdacityClient.sharedInstance.getPublicUserData(url: UDACITY_STUDENT_URL){name, error in
+            guard (error == nil) else {
+                performUIUpdatesOnMain({
+                    self.alertDialog(title: "Error", message: "Name was not retrieved! Try again later.", buttonTitle: "OK")
+                })
+                return
+            }
+                
+                let name = name
+                self.dict = ["firstName": name.0,"lastName": name.1]
+            
+        }
+        
+    }
     
     func updateStudentLocation(url: String, dict: [String:String]){
         sv = LoginViewController.displaySpinner(onView: self.view)

@@ -240,7 +240,7 @@ class UdacityClient: NSObject{
                 sendError("Could not parse the data as JSON: '\(data!)'")
                 return
             }
-
+      
              completionHandlerForPOST(parsedResult, nil)
         }
         
@@ -248,20 +248,44 @@ class UdacityClient: NSObject{
         return task
     }
     
-    func getPublicUserData(){
+    func getPublicUserData(url: String, completionHandlerForPOST: @escaping (_ result: (String, String), _ error: NSError?) -> Void) -> URLSessionDataTask{
         
-        var request = URLRequest(url: URL(string: "https://www.udacity.com/api/users/1ryber@gmail.com")!)
+        var request = URLRequest(url: URL(string: url)!)
             request.timeoutInterval = 10.0
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil { // Handle error...
-                return
+            func sendError(_ error: String) {
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                completionHandlerForPOST(("",""), NSError(domain: "getPublicUserData", code: 1, userInfo: userInfo))
             }
             let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range) /* subset response data! */
-           print(String(data: newData!, encoding: .utf8)!)
+            let newData = data?.subdata(in: range)
+            let parsedResult: [String:AnyObject]!
+            do {
+                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as! [String:AnyObject]
+            } catch {
+                print("Could not parse the data as JSON: '\(data)'")
+                return
+            }
+            
+            guard let users =  parsedResult["user"] as! [String: AnyObject]! else{
+                  sendError("parsed results had an error.")
+                return
+            }
+            
+            guard let firstName = users["nickname"] as! String! else{
+                 sendError("firstName had an error.")
+                return}
+            guard let lastName = users["last_name"] as! String! else{
+                 sendError("lastName had an error.")
+                return
+            }
+            let name = (firstName , lastName)
+            completionHandlerForPOST(name, nil)
         }
         task.resume()
+         return task
         
     }
     

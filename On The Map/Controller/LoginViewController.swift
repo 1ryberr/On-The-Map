@@ -32,6 +32,7 @@ class LoginViewController: UIViewController {
         if (FBSDKAccessToken.current() != nil) {
             performSegue(withIdentifier:"mapsSegue", sender: nil)
         }
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -66,7 +67,6 @@ class LoginViewController: UIViewController {
                 
                      DispatchQueue.main.async {
                         self.performSegue(withIdentifier:"mapsSegue", sender: nil)
-                       StudentInformationArray.info.sessionID = id
                         
                 }
               LoginViewController.removeSpinner(spinner: self.sv)
@@ -131,6 +131,7 @@ class LoginViewController: UIViewController {
         
         sv = LoginViewController.displaySpinner(onView: self.view)
         getSessionID(userName:  userNameTextfield.text!, passWord: passwordTextfield.text!)
+        StudentInformationArray.info.userName = userNameTextfield.text
         userNameTextfield.text = ""
         passwordTextfield.text = ""
         
@@ -143,6 +144,7 @@ class LoginViewController: UIViewController {
         {
             loginManager.logOut()
         }
+        
         loginManager.logIn(withReadPermissions: readPermissions, from: self) { (result, error) in
             if ((error) != nil){
                 print("login failed with error: \(String(describing: error))")
@@ -232,6 +234,7 @@ extension LoginViewController {
             spinner.removeFromSuperview()
             
         }
+        
     }
     
     

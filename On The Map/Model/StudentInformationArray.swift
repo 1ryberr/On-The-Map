@@ -10,7 +10,7 @@ import UIKit
 final class StudentInformationArray: NSObject{
     static let info = StudentInformationArray()
     private override init() {}
-    var sessionID : String!
+    var userName : String!
     var studentList = [StudentInformation]()
 }
 

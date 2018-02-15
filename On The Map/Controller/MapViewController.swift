@@ -16,13 +16,15 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         AppUtility.lockOrientation(.all)
-        print(StudentInformationArray.info.sessionID)
+    
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
+        
         if  StudentInformationArray.info.studentList.isEmpty{
             loadStudentData()
         }else{
