@@ -170,35 +170,18 @@ class UdacityTableViewController: UITableViewController  {
     
     @IBAction func pinMyLocation(_ sender: Any) {
         
-        let alert = UIAlertController(title: "Who are you?", message: "First and last name required.", preferredStyle: UIAlertControllerStyle.alert)
-        
-        let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {action in })
-        
-        let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+        if StudentInformationArray.info.userName == nil{
+            let alert = UIAlertController(title: "Udacity Login Needed for This Option", message: "Please log out and Login again with the Udacity Login!", preferredStyle: UIAlertControllerStyle.actionSheet)
             
-            let firstName = (alert.textFields![0] as UITextField).text!
-            let lastName = (alert.textFields![1] as UITextField).text!
-            
+            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+            })
+            alert.addAction(actionOK)
+            self.present(alert, animated: true, completion: nil)
+        }else{
             let controller: PinViewController
             controller = self.storyboard?.instantiateViewController(withIdentifier: "PinViewController") as! PinViewController
-         //   controller.firstName = firstName
-         //   controller.lastName = lastName
             self.present(controller, animated: true, completion: nil)
-            
-        })
-        
-        alert.addAction(actionCancel)
-        alert.addAction(actionOK)
-        alert.addTextField(configurationHandler: {textField in
-            textField.backgroundColor = UIColor.white
-            textField.placeholder = "First Name"
-        })
-        alert.addTextField(configurationHandler: {textfield in
-            textfield.backgroundColor = UIColor.white
-            textfield.placeholder = "Last Name"
-        })
-        
-        self.present(alert, animated: true, completion: nil)
+        }
     }
     
     @IBAction func logOut(_ sender: Any) {

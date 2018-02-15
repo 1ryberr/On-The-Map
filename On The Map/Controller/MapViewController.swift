@@ -12,7 +12,7 @@ import MapKit
 class MapViewController: UIViewController {
     @IBOutlet weak var map: MKMapView!
     var sv : UIView!
-    private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100"
+    private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100&order=-updatedAt"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,11 +99,18 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func pinMyLocation(_ sender: Any) {
-        
+        if StudentInformationArray.info.userName == nil{
+            let alert = UIAlertController(title: "Udacity Login Needed for This Option", message: "Please log out and Login again with the Udacity Login!", preferredStyle: UIAlertControllerStyle.actionSheet)
+            
+            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+            })
+            alert.addAction(actionOK)
+            self.present(alert, animated: true, completion: nil)
+        }else{
         let controller: PinViewController
         controller = self.storyboard?.instantiateViewController(withIdentifier: "PinViewController") as! PinViewController
         self.present(controller, animated: true, completion: nil)
-        
+        }
     }
     
     func labelFunction(label: UILabel, text: String, color: UIColor) {
