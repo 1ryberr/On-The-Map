@@ -21,7 +21,7 @@ class PinViewController: UIViewController{
     @IBOutlet weak var linkTextField: UITextField!
     @IBOutlet weak var submitButton: UIButton!
     
-   
+    
     private  let UDACITY_URL = "https://parse.udacity.com/parse/classes/StudentLocation"
     private let UDACITY_STUDENT_URL = "https://www.udacity.com/api/users/\(StudentInformationArray.info.userName!)"
     var enterLocation = "Enter Your Location Here"
@@ -37,29 +37,31 @@ class PinViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         userInfo()
+        
+        userInfo()
         customizeView(view: submitButton, cornerRadius: 4, borderWidth: 2)
         customizeView(view: findButton, cornerRadius: 4, borderWidth: 2)
         customizeView(view: firstView, cornerRadius: 6, borderWidth: 7)
         customizeView(view: secondView, cornerRadius: 6, borderWidth: 7)
-    
+        
         AppUtility.lockOrientation(.portrait)
         textFieldFunction(textField: linkTextField, placeholder: enterLink)
         textFieldFunction(textField: localTextField, placeholder: enterLocation )
         firstViewIsHidden(false)
-    
+        
         checkIfFirstLaunch(key: "objectId")
         objectId = UserDefaults.standard.string(forKey: "objectId")!
-        dict = ["objectId": objectId]
+        
         
         labelFunction(label: whereTitle, text: "Where Are You", color: UIColor.gray)
         labelFunction(label: studyTitle, text: "studying", color: UIColor.black)
         labelFunction(label: todayTitle, text: "today.", color:UIColor.gray)
-       
+        
+        
     }
-   
     
-   
+    
+    
     
     func customizeView(view: UIView, cornerRadius: Int, borderWidth: Int){
         view.layer.cornerRadius = CGFloat(cornerRadius)
@@ -82,11 +84,11 @@ class PinViewController: UIViewController{
                 let region = MKCoordinateRegion(center: (validPlacemark.location?.coordinate)!, span: span)
                 locationMap?.setRegion(region, animated: true)
                 
-                 let myInfo = StudentCallOut(coordinate:CLLocationCoordinate2DMake(self.coordinates.latitude,self.coordinates.longitude), title:" \(self.dict["firstName"]!) \(self.dict["lastName"]!)", mediaURL: "The url you enter goes here!")
+                let myInfo = StudentCallOut(coordinate:CLLocationCoordinate2DMake(self.coordinates.latitude,self.coordinates.longitude), title:" \(self.dict["firstName"]!) \(self.dict["lastName"]!)", mediaURL: "The url you enter goes here!")
                 locationMap?.addAnnotation(myInfo)
                 self.dict["latitude"] = "\(self.coordinates.latitude)"
                 self.dict["longitude"] = "\(self.coordinates.longitude)"
-               LoginViewController.removeSpinner(spinner: self.sv)
+                LoginViewController.removeSpinner(spinner: self.sv)
                 
             } else {
                 
@@ -104,7 +106,7 @@ class PinViewController: UIViewController{
         
     }
     
-   func flip() {
+    func flip() {
         let transitionOptions: UIViewAnimationOptions = [.transitionFlipFromLeft, .showHideTransitionViews]
         
         UIView.transition(with: firstView, duration: 1.0, options: transitionOptions, animations: {
@@ -115,7 +117,7 @@ class PinViewController: UIViewController{
             
         })
     }
-   
+    
     func checkIfFirstLaunch(key: String){
         
         if UserDefaults.standard.bool(forKey: "hasLaunchedBefore") {
@@ -137,7 +139,7 @@ class PinViewController: UIViewController{
         
         let string = NSAttributedString(string: text, attributes: attrs)
         label.attributedText = string
-
+        
     }
     
     func textFieldFunction(textField: UITextField, placeholder: String){
@@ -167,7 +169,7 @@ class PinViewController: UIViewController{
             linkTextField.isHidden = false
             secondView.isHidden = false
             submitButton.isHidden = false
-           
+            
         }else{
             map.isHidden = true
             linkTextField.isHidden = true
@@ -187,6 +189,7 @@ class PinViewController: UIViewController{
     }
     
     func userInfo(){
+        
         UdacityClient.sharedInstance.getPublicUserData(url: UDACITY_STUDENT_URL){name, error in
             guard (error == nil) else {
                 performUIUpdatesOnMain({
@@ -194,22 +197,22 @@ class PinViewController: UIViewController{
                 })
                 return
             }
-                
-                let name = name
-                self.dict = ["firstName": name.0,"lastName": name.1]
+            let name = name
+            
+            self.dict = ["firstName": name.0,"lastName": name.1]
             
         }
         
     }
     
-    func updateStudentLocation(url: String, dict: [String:String]){
+    func updateStudentLocation(url: String, objectID: String, dict: [String:String]){
         sv = LoginViewController.displaySpinner(onView: self.view)
-        let newUrl = url + "/" + dict["objectId"]!
+        let newUrl = url + "/" + objectId
         UdacityClient.sharedInstance.updateStudentLocation(url: newUrl, jsonBodyString: UdacityClient.sharedInstance.jsonBodyString(dict: dict)){(data, error) in
             guard (error == nil) else {
                 performUIUpdatesOnMain({
-                   LoginViewController.removeSpinner(spinner: self.sv)
-                  self.alertDialog(title: "Error", message: "Network Error! Try again later.", buttonTitle: "OK")
+                    LoginViewController.removeSpinner(spinner: self.sv)
+                    self.alertDialog(title: "Error", message: "Network Error! Try again later.", buttonTitle: "OK")
                 })
                 return
             }
@@ -218,9 +221,9 @@ class PinViewController: UIViewController{
                 print(datum)
             }else {
                 performUIUpdatesOnMain {
-                     self.alertDialog(title: "Error", message: "Network Error! Try again later.", buttonTitle: "OK")
+                    self.alertDialog(title: "Error", message: "Network Error! Try again later.", buttonTitle: "OK")
                 }
-           
+                
             }
         }
         
@@ -232,7 +235,7 @@ class PinViewController: UIViewController{
             guard (error == nil) else {
                 performUIUpdatesOnMain({
                     self.alertDialog(title: "Error", message: "Network Error! Try again later.", buttonTitle: "OK")
-                   LoginViewController.removeSpinner(spinner: self.sv)
+                    LoginViewController.removeSpinner(spinner: self.sv)
                     
                 })
                 return
@@ -240,9 +243,8 @@ class PinViewController: UIViewController{
             if let objectId = objectId{
                 self.objectId = objectId
                 UserDefaults.standard.set(objectId, forKey: "objectId")
-                performUIUpdatesOnMain({
-                   LoginViewController.removeSpinner(spinner: self.sv)
-                })
+                LoginViewController.removeSpinner(spinner: self.sv)
+        
             }
         }
     }
@@ -293,7 +295,7 @@ class PinViewController: UIViewController{
             
             let actionOK = UIAlertAction(title: "Overwrite", style: UIAlertActionStyle.default, handler: {action in
                 
-                self.updateStudentLocation(url: self.UDACITY_URL, dict: self.dict)
+                self.updateStudentLocation(url: self.UDACITY_URL, objectID:  self.objectId, dict: self.dict)
                 self.dismiss(animated: true, completion: {})
             })
             let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {action in
@@ -336,7 +338,7 @@ extension PinViewController: MKMapViewDelegate {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = false
             annotationView?.annotation = annotation
-           
+            
         } else {
             annotationView?.annotation = annotation
         }
