@@ -89,12 +89,14 @@ class MapViewController: UIViewController {
         self.removePinCoordinates()
         StudentInformationArray.info.studentList.removeAll()
         loadStudentData()
+        
     }
     
     @IBAction func logOut(_ sender: Any) {
         dismiss(animated: true, completion: nil)
         UdacityClient.sharedInstance.logOut{ (parsedResults, error) in
             print(parsedResults!)
+            
         }
     }
     
