@@ -60,9 +60,6 @@ class PinViewController: UIViewController{
         
     }
     
-    
-    
-    
     func customizeView(view: UIView, cornerRadius: Int, borderWidth: Int){
         view.layer.cornerRadius = CGFloat(cornerRadius)
         view.layer.borderWidth = CGFloat(borderWidth)
@@ -107,6 +104,7 @@ class PinViewController: UIViewController{
     }
     
     func flip() {
+        
         let transitionOptions: UIViewAnimationOptions = [.transitionFlipFromLeft, .showHideTransitionViews]
         
         UIView.transition(with: firstView, duration: 1.0, options: transitionOptions, animations: {
@@ -153,6 +151,7 @@ class PinViewController: UIViewController{
             NSAttributedStringKey.strokeWidth.rawValue: -0.05]
         textField.defaultTextAttributes = pinTextAttributes
         textField.textAlignment = .center
+        
     }
     
     func firstViewIsHidden(_ enabled: Bool) {
@@ -179,7 +178,8 @@ class PinViewController: UIViewController{
         
     }
     
-    func alertDialog(title: String, message: String, buttonTitle: String){
+    func alertDialog(title: String, message: String, buttonTitle: String) {
+        
         let controller = UIAlertController(title:title, message: message, preferredStyle: .alert)
         
         let okAction = UIAlertAction(title: buttonTitle, style: UIAlertActionStyle.default) { action in self.dismiss(animated: true, completion: nil)
@@ -188,7 +188,7 @@ class PinViewController: UIViewController{
         self.present(controller, animated: true)
     }
     
-    func userInfo(){
+    func userInfo() {
         
         UdacityClient.sharedInstance.getPublicUserData(url: UDACITY_STUDENT_URL){name, error in
             guard (error == nil) else {
@@ -198,14 +198,14 @@ class PinViewController: UIViewController{
                 return
             }
             let name = name
-            
             self.dict = ["firstName": name.0,"lastName": name.1]
             
         }
         
     }
     
-    func updateStudentLocation(url: String, objectID: String, dict: [String:String]){
+    func updateStudentLocation(url: String, objectID: String, dict: [String:String]) {
+        
         sv = LoginViewController.displaySpinner(onView: self.view)
         let newUrl = url + "/" + objectId
         UdacityClient.sharedInstance.updateStudentLocation(url: newUrl, jsonBodyString: UdacityClient.sharedInstance.jsonBodyString(dict: dict)){(data, error) in
@@ -230,6 +230,7 @@ class PinViewController: UIViewController{
     }
     
     func postStudentLocation(url:String, dict: [String:String]){
+        
         sv = LoginViewController.displaySpinner(onView: self.view)
         UdacityClient.sharedInstance.postStudentLocation(url: url, jsonBodyString: UdacityClient.sharedInstance.jsonBodyString(dict: dict)){ (objectId, error) in
             guard (error == nil) else {
@@ -367,6 +368,7 @@ extension PinViewController: MKMapViewDelegate {
         addBounceAnimationToView(view: customView)
         
     }
+    
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         if view.isKind(of: MKPinAnnotationView.self)
         {
