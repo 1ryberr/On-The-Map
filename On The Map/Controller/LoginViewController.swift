@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FBSDKLoginKit
+//import FBSDKLoginKit
 import LocalAuthentication
 
 class LoginViewController: UIViewController {
@@ -29,9 +29,9 @@ class LoginViewController: UIViewController {
         AppUtility.lockOrientation(.portrait)
         authenticateUser()
         
-        if (FBSDKAccessToken.current() != nil) {
-            performSegue(withIdentifier:"mapsSegue", sender: nil)
-        }
+//        if (FBSDKAccessToken.current() != nil) {
+//            performSegue(withIdentifier:"mapsSegue", sender: nil)
+//        }
         
     }
     
@@ -137,24 +137,24 @@ class LoginViewController: UIViewController {
         
     }
     
-    @IBAction func fBButton(_ sender: Any) {
-        let readPermissions = ["public_profile"]
-        let loginManager = FBSDKLoginManager()
-        if let currentAccessToken = FBSDKAccessToken.current(), currentAccessToken.appID != FBSDKSettings.appID()
-        {
-            loginManager.logOut()
-        }
-        
-        loginManager.logIn(withReadPermissions: readPermissions, from: self) { (result, error) in
-            if ((error) != nil){
-                print("login failed with error: \(String(describing: error))")
-            } else if (result?.isCancelled)! {
-                print("login cancelled")
-            } else {
-                self.performSegue(withIdentifier:"mapsSegue", sender: nil)
-            }
-        }
-    }
+//    @IBAction func fBButton(_ sender: Any) {
+//        let readPermissions = ["public_profile"]
+//        let loginManager = FBSDKLoginManager()
+//        if let currentAccessToken = FBSDKAccessToken.current(), currentAccessToken.appID != FBSDKSettings.appID()
+//        {
+//            loginManager.logOut()
+//        }
+//
+//        loginManager.logIn(withReadPermissions: readPermissions, from: self) { (result, error) in
+//            if ((error) != nil){
+//                print("login failed with error: \(String(describing: error))")
+//            } else if (result?.isCancelled)! {
+//                print("login cancelled")
+//            } else {
+//                self.performSegue(withIdentifier:"mapsSegue", sender: nil)
+//            }
+//        }
+//    }
 }
 
 extension LoginViewController: UITextFieldDelegate {
