@@ -38,9 +38,9 @@ class UdacityTableViewController: UITableViewController  {
                 LoginViewController.removeSpinner(spinner: self.sv)
                 performUIUpdatesOnMain {
                     
-                    let alert = UIAlertController(title: "Network Error", message: "Check Network Connection!", preferredStyle: UIAlertControllerStyle.actionSheet)
+                    let alert = UIAlertController(title: "Network Error", message: "Check Network Connection!", preferredStyle: UIAlertController.Style.actionSheet)
                     
-                    let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+                    let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
                     })
                     alert.addAction(actionOK)
                     self.present(alert, animated: true, completion: nil)
@@ -66,9 +66,9 @@ class UdacityTableViewController: UITableViewController  {
     }
     
     func alertToLink(title: String, subtitle: String){
-        let alert = UIAlertController(title: "\(title) has a link.", message: "Would you like to view it.", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "\(title) has a link.", message: "Would you like to view it.", preferredStyle: UIAlertController.Style.alert)
         
-        let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+        let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
             
             let controller: WebViewController
             controller = self.storyboard?.instantiateViewController(withIdentifier: "WebViewController") as! WebViewController
@@ -76,7 +76,7 @@ class UdacityTableViewController: UITableViewController  {
             self.navigationController?.pushViewController(controller, animated: true)
         })
         
-        let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { action in
+        let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { action in
             
         }
         
@@ -104,7 +104,7 @@ class UdacityTableViewController: UITableViewController  {
         studentTableView.refreshControl = refreshControls
     }
     
-    @objc func didRefresh(event: UIControlEvents) {
+    @objc func didRefresh(event: UIControl.Event) {
         
         StudentInformationArray.info.studentList.removeAll()
         loadStudentData()
@@ -115,9 +115,9 @@ class UdacityTableViewController: UITableViewController  {
     
     func labelFunction(label: UILabel, text: String, color: UIColor){
         
-        let attrs = [NSAttributedStringKey.foregroundColor: color,
-                     NSAttributedStringKey.font: UIFont(name: "Georgia-Bold", size: 24)!,
-                     NSAttributedStringKey.textEffect: NSAttributedString.TextEffectStyle.letterpressStyle as NSString
+        let attrs = [NSAttributedString.Key.foregroundColor: color,
+                     NSAttributedString.Key.font: UIFont(name: "Georgia-Bold", size: 24)!,
+                     NSAttributedString.Key.textEffect: NSAttributedString.TextEffectStyle.letterpressStyle as NSString
         ]
         
         let string = NSAttributedString(string: text, attributes: attrs)
@@ -133,9 +133,9 @@ class UdacityTableViewController: UITableViewController  {
             
         }else{
             
-            let alert = UIAlertController(title: "Invalid Link!", message: "This pin doesnt have a valid URL.", preferredStyle: UIAlertControllerStyle.actionSheet)
+            let alert = UIAlertController(title: "Invalid Link!", message: "This pin doesnt have a valid URL.", preferredStyle: UIAlertController.Style.actionSheet)
             
-            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+            let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
             })
             alert.addAction(actionOK)
             present(alert, animated: true, completion: nil)
@@ -171,9 +171,9 @@ class UdacityTableViewController: UITableViewController  {
     @IBAction func pinMyLocation(_ sender: Any) {
         
         if StudentInformationArray.info.userName == nil{
-            let alert = UIAlertController(title: "Udacity Login Needed for This Option", message: "Please log out and Login again with the Udacity Login!", preferredStyle: UIAlertControllerStyle.actionSheet)
+            let alert = UIAlertController(title: "Udacity Login Needed for This Option", message: "Please log out and Login again with the Udacity Login!", preferredStyle: UIAlertController.Style.actionSheet)
             
-            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+            let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
             })
             alert.addAction(actionOK)
             self.present(alert, animated: true, completion: nil)

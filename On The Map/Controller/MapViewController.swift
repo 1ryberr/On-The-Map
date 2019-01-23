@@ -39,9 +39,11 @@ class MapViewController: UIViewController {
     
     func annotationFunc(list:[StudentInformation]) {
         
-        for item in list where item.latitude != nil{
-            let studentAnnotation = StudentCallOut(coordinate:CLLocationCoordinate2DMake(item.latitude!,item.longitude!), title:"  \(item.firstName ?? "First Name") \(item.lastName ?? "Last Name")", mediaURL: "\(item.mediaURL ?? "http://www.google.com")")
-            self.map.addAnnotations([studentAnnotation])
+        for item in list where item.latitude != nil  {
+            if item.longitude != nil{
+                 let studentAnnotation = StudentCallOut(coordinate:CLLocationCoordinate2DMake(item.latitude!,item.longitude!), title:"  \(item.firstName ?? "First Name") \(item.lastName ?? "Last Name")", mediaURL: "\(item.mediaURL ?? "http://www.google.com")")
+                 self.map.addAnnotations([studentAnnotation])
+            }
         }
     }
     
@@ -59,9 +61,9 @@ class MapViewController: UIViewController {
                  LoginViewController.removeSpinner(spinner: self.sv)
                 performUIUpdatesOnMain {
                     
-                    let alert = UIAlertController(title: "Network Error", message: "Check Network Connection!", preferredStyle: UIAlertControllerStyle.actionSheet)
+                    let alert = UIAlertController(title: "Network Error", message: "Check Network Connection!", preferredStyle: UIAlertController.Style.actionSheet)
                     
-                    let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+                    let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
                     })
                     alert.addAction(actionOK)
                     self.present(alert, animated: true, completion: nil)
@@ -74,7 +76,7 @@ class MapViewController: UIViewController {
                 var myClass = [StudentInformation]()
                 myClass = students
                 myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
-                StudentInformationArray.info.studentList = myClass.flatMap{$0}
+                StudentInformationArray.info.studentList = myClass.compactMap{$0}
                 LoginViewController.removeSpinner(spinner: self.sv)
                 DispatchQueue.main.async {
                     self.annotationFunc(list: StudentInformationArray.info.studentList)
@@ -102,9 +104,9 @@ class MapViewController: UIViewController {
     
     @IBAction func pinMyLocation(_ sender: Any) {
         if StudentInformationArray.info.userName == nil{
-            let alert = UIAlertController(title: "Udacity Login Needed for This Option", message: "Please log out and Login again with the Udacity Login!", preferredStyle: UIAlertControllerStyle.actionSheet)
+            let alert = UIAlertController(title: "Udacity Login Needed for This Option", message: "Please log out and Login again with the Udacity Login!", preferredStyle: UIAlertController.Style.actionSheet)
             
-            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+            let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
             })
             alert.addAction(actionOK)
             self.present(alert, animated: true, completion: nil)
@@ -117,9 +119,9 @@ class MapViewController: UIViewController {
     
     func labelFunction(label: UILabel, text: String, color: UIColor) {
         
-        let attrs = [NSAttributedStringKey.foregroundColor: color,
-                     NSAttributedStringKey.font: UIFont(name: "Georgia-Bold", size: 24)!,
-                     NSAttributedStringKey.textEffect: NSAttributedString.TextEffectStyle.letterpressStyle as NSString]
+        let attrs = [NSAttributedString.Key.foregroundColor: color,
+                     NSAttributedString.Key.font: UIFont(name: "Georgia-Bold", size: 24)!,
+                     NSAttributedString.Key.textEffect: NSAttributedString.TextEffectStyle.letterpressStyle as NSString]
         
         let string = NSAttributedString(string: text, attributes: attrs)
         label.attributedText = string
@@ -134,7 +136,7 @@ class MapViewController: UIViewController {
         let timingFunctions = NSMutableArray(capacity: bounceAnimation.values!.count)
         
         for _ in  0...bounceAnimation.values!.count {
-            timingFunctions.add(CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
+            timingFunctions.add(CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut))
         }
         bounceAnimation.timingFunctions = timingFunctions as NSArray as? [CAMediaTimingFunction]
         bounceAnimation.isRemovedOnCompletion = false
@@ -151,9 +153,9 @@ class MapViewController: UIViewController {
             self.alertToLink(title: customAnnotation.title!, subtitle: customAnnotation.subtitle!)
         }else{
             
-            let alert = UIAlertController(title: "Invalid Link!", message: "This pin doesnt have a valid URL.", preferredStyle: UIAlertControllerStyle.actionSheet)
+            let alert = UIAlertController(title: "Invalid Link!", message: "This pin doesnt have a valid URL.", preferredStyle: UIAlertController.Style.actionSheet)
             
-            let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+            let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
             })
             alert.addAction(actionOK)
             present(alert, animated: true, completion: nil)
@@ -174,9 +176,9 @@ class MapViewController: UIViewController {
     
     func alertToLink(title: String, subtitle: String){
         
-        let alert = UIAlertController(title: "\(title) has a URL.", message: "Would you like to view it.", preferredStyle: UIAlertControllerStyle.actionSheet)
+        let alert = UIAlertController(title: "\(title) has a URL.", message: "Would you like to view it.", preferredStyle: UIAlertController.Style.actionSheet)
         
-        let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+        let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
             
             let controller: WebViewController
             controller = self.storyboard?.instantiateViewController(withIdentifier: "WebViewController") as! WebViewController
@@ -184,7 +186,7 @@ class MapViewController: UIViewController {
             self.navigationController?.pushViewController(controller, animated: true)
         })
         
-        let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { action in
+        let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { action in
             
         }
         

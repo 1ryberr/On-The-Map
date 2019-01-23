@@ -17,7 +17,7 @@ class StudentCallOutView: MKAnnotationView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
         if hitView != nil {
-            superview?.bringSubview(toFront: self)
+            superview?.bringSubviewToFront(self)
         }
         return hitView
     }

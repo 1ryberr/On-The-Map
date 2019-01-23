@@ -49,13 +49,13 @@ class UdacityClient: NSObject{
             
             let parsedResult: [String:AnyObject]!
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String:AnyObject]
             } catch {
                 sendError("Could not parse the data as JSON: '\(data)'")
                 return
             }
             
-            if let personInfo = parsedResult!["results"] as? [[String:AnyObject]]!{
+            if let personInfo = parsedResult!["results"] as? [[String:AnyObject]]{
                 let students = StudentInformation.studentsFromResults(personInfo)
                 completionHandlerForPOST(students, nil)
             }else{
@@ -107,7 +107,7 @@ class UdacityClient: NSObject{
          
             let parsedResult: [String:AnyObject]!
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String:AnyObject]
             } catch {
                completionHandlerForPOST(nil, NSError(domain: "postStudentLocation", code: 1, userInfo: [NSLocalizedDescriptionKey : error]))
                 return
@@ -188,7 +188,7 @@ class UdacityClient: NSObject{
         
             let parsedResult: [String:AnyObject]!
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as? [String:AnyObject]
             } catch {
                 sendError("Could not parse the data as JSON: '\(data)'")
                 return
@@ -231,11 +231,12 @@ class UdacityClient: NSObject{
                 completionHandlerForPOST(nil, NSError(domain: "getStudentInfo", code: 1, userInfo: userInfo))
             }
             
-            let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range)
+            let range = 5..<data!.count
+            let rang = Range(range)
+            let newData = data?.subdata(in: rang)
             let parsedResult: [String:AnyObject]!
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as! [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as? [String:AnyObject]
             } catch {
                 sendError("Could not parse the data as JSON: '\(data!)'")
                 return
@@ -259,25 +260,25 @@ class UdacityClient: NSObject{
                 let userInfo = [NSLocalizedDescriptionKey : error]
                 completionHandlerForPOST(("",""), NSError(domain: "getPublicUserData", code: 1, userInfo: userInfo))
             }
-            let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range)
+            let range = 5..<data!.count
+           let newData = data?.subdata(in: range)
             let parsedResult: [String:AnyObject]!
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as! [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as? [String:AnyObject]
             } catch {
                 print("Could not parse the data as JSON: '\(data)'")
                 return
             }
             
-            guard let users =  parsedResult["user"] as! [String: AnyObject]! else{
+            guard let users =  parsedResult["user"] as? [String: AnyObject] else{
                   sendError("parsed results had an error.")
                 return
             }
             
-            guard let firstName = users["nickname"] as! String! else{
+            guard let firstName = users["nickname"] as? String else{
                  sendError("firstName had an error.")
                 return}
-            guard let lastName = users["last_name"] as! String! else{
+            guard let lastName = users["last_name"] as? String else{
                  sendError("lastName had an error.")
                 return
             }

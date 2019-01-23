@@ -77,7 +77,7 @@ class PinViewController: UIViewController{
         geocoder.geocodeAddressString(address!, completionHandler: {(placemarks, error) -> Void in
             if let validPlacemark = placemarks?[0]{
                 self.coordinates = (validPlacemark.location?.coordinate)!
-                let span = MKCoordinateSpanMake(0.05, 0.05)
+                let span = MKCoordinateSpan.init(latitudeDelta: 0.05, longitudeDelta: 0.05)
                 let region = MKCoordinateRegion(center: (validPlacemark.location?.coordinate)!, span: span)
                 locationMap?.setRegion(region, animated: true)
                 
@@ -89,9 +89,9 @@ class PinViewController: UIViewController{
                 
             } else {
                 
-                let alert = UIAlertController(title: "Error", message: "Geolocation has failed! Try again later.", preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Error", message: "Geolocation has failed! Try again later.", preferredStyle: UIAlertController.Style.alert)
                 
-                let actionOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {action in
+                let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
                     LoginViewController.removeSpinner(spinner: self.sv)
                     self.dismiss(animated: true, completion: {})
                 })
@@ -105,7 +105,7 @@ class PinViewController: UIViewController{
     
     func flip() {
         
-        let transitionOptions: UIViewAnimationOptions = [.transitionFlipFromLeft, .showHideTransitionViews]
+        let transitionOptions: UIView.AnimationOptions = [.transitionFlipFromLeft, .showHideTransitionViews]
         
         UIView.transition(with: firstView, duration: 1.0, options: transitionOptions, animations: {
             
@@ -130,9 +130,9 @@ class PinViewController: UIViewController{
     
     func labelFunction(label: UILabel, text: String, color: UIColor){
         
-        let attrs = [NSAttributedStringKey.foregroundColor: color,
-                     NSAttributedStringKey.font: UIFont(name: "Georgia-Bold", size: 24)!,
-                     NSAttributedStringKey.textEffect: NSAttributedString.TextEffectStyle.letterpressStyle as NSString
+        let attrs = [NSAttributedString.Key.foregroundColor: color,
+                     NSAttributedString.Key.font: UIFont(name: "Georgia-Bold", size: 24)!,
+                     NSAttributedString.Key.textEffect: NSAttributedString.TextEffectStyle.letterpressStyle as NSString
         ]
         
         let string = NSAttributedString(string: text, attributes: attrs)
@@ -145,11 +145,11 @@ class PinViewController: UIViewController{
         textField.delegate = self
         textField.text = placeholder
         let pinTextAttributes:[String:Any] = [
-            NSAttributedStringKey.strokeColor.rawValue: UIColor.white,
-            NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
-            NSAttributedStringKey.font.rawValue: UIFont(name: "Georgia-Bold", size: 24)!,
-            NSAttributedStringKey.strokeWidth.rawValue: -0.05]
-        textField.defaultTextAttributes = pinTextAttributes
+            NSAttributedString.Key.strokeColor.rawValue: UIColor.white,
+            NSAttributedString.Key.foregroundColor.rawValue: UIColor.white,
+            NSAttributedString.Key.font.rawValue: UIFont(name: "Georgia-Bold", size: 24)!,
+            NSAttributedString.Key.strokeWidth.rawValue: -0.05]
+        textField.defaultTextAttributes = convertToNSAttributedStringKeyDictionary(pinTextAttributes)
         textField.textAlignment = .center
         
     }
@@ -182,7 +182,7 @@ class PinViewController: UIViewController{
         
         let controller = UIAlertController(title:title, message: message, preferredStyle: .alert)
         
-        let okAction = UIAlertAction(title: buttonTitle, style: UIAlertActionStyle.default) { action in self.dismiss(animated: true, completion: nil)
+        let okAction = UIAlertAction(title: buttonTitle, style: UIAlertAction.Style.default) { action in self.dismiss(animated: true, completion: nil)
         }
         controller.addAction(okAction)
         self.present(controller, animated: true)
@@ -258,7 +258,7 @@ class PinViewController: UIViewController{
         let timingFunctions = NSMutableArray(capacity: bounceAnimation.values!.count)
         
         for _ in  0...bounceAnimation.values!.count {
-            timingFunctions.add(CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
+            timingFunctions.add(CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut))
         }
         bounceAnimation.timingFunctions = timingFunctions as NSArray as? [CAMediaTimingFunction]
         bounceAnimation.isRemovedOnCompletion = false
@@ -292,14 +292,14 @@ class PinViewController: UIViewController{
             })
             
         }else{
-            let alert = UIAlertController(title: "Update", message: "This will update your location and information.", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Update", message: "This will update your location and information.", preferredStyle: UIAlertController.Style.alert)
             
-            let actionOK = UIAlertAction(title: "Overwrite", style: UIAlertActionStyle.default, handler: {action in
+            let actionOK = UIAlertAction(title: "Overwrite", style: UIAlertAction.Style.default, handler: {action in
                 
                 self.updateStudentLocation(url: self.UDACITY_URL, objectID:  self.objectId, dict: self.dict)
                 self.dismiss(animated: true, completion: {})
             })
-            let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {action in
+            let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: {action in
                 self.dismiss(animated: true, completion: {})
                 
             })
@@ -381,3 +381,8 @@ extension PinViewController: MKMapViewDelegate {
     
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSAttributedStringKeyDictionary(_ input: [String: Any]) -> [NSAttributedString.Key: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
