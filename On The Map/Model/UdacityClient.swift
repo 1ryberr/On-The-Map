@@ -183,12 +183,10 @@ class UdacityClient: NSObject{
                 sendError("No data was returned by the request!")
                 return
             }
-            let range = Range(5..<data.count)
-            let newData = data.subdata(in: range)
-        
+           
             let parsedResult: [String:AnyObject]!
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as? [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String:AnyObject]
             } catch {
                 sendError("Could not parse the data as JSON: '\(data)'")
                 return
@@ -231,12 +229,9 @@ class UdacityClient: NSObject{
                 completionHandlerForPOST(nil, NSError(domain: "getStudentInfo", code: 1, userInfo: userInfo))
             }
             
-            let range = 5..<data!.count
-            let rang = Range(range)
-            let newData = data?.subdata(in: rang)
             let parsedResult: [String:AnyObject]!
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as? [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String:AnyObject]
             } catch {
                 sendError("Could not parse the data as JSON: '\(data!)'")
                 return
@@ -260,11 +255,10 @@ class UdacityClient: NSObject{
                 let userInfo = [NSLocalizedDescriptionKey : error]
                 completionHandlerForPOST(("",""), NSError(domain: "getPublicUserData", code: 1, userInfo: userInfo))
             }
-            let range = 5..<data!.count
-           let newData = data?.subdata(in: range)
+          
             let parsedResult: [String:AnyObject]!
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as? [String:AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String:AnyObject]
             } catch {
                 print("Could not parse the data as JSON: '\(data)'")
                 return

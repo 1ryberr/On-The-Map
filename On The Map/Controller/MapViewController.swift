@@ -97,7 +97,7 @@ class MapViewController: UIViewController {
     @IBAction func logOut(_ sender: Any) {
         dismiss(animated: true, completion: nil)
         UdacityClient.sharedInstance.logOut{ (parsedResults, error) in
-            print(parsedResults!)
+            print(parsedResults)
             
         }
     }
