@@ -1,7 +1,7 @@
 //
 //  StudentTableViewCell.swift
 //  On The Map
-//
+///Users/ryanberry/Documents/On-The-Map/On The Map/Model
 //  Created by Ryan Berry on 12/23/17.
 //  Copyright © 2017 Ryan Berry. All rights reserved.
 //

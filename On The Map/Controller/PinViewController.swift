@@ -170,6 +170,7 @@ class PinViewController: UIViewController{
             submitButton.isHidden = false
             
         }else{
+            
             map.isHidden = true
             linkTextField.isHidden = true
             secondView.isHidden = true
