@@ -13,7 +13,7 @@ class UdacityClient: NSObject{
     static let sharedInstance = UdacityClient()
     private override init() {}
     
-    func getStudentInfo(url: String, completionHandlerForPOST: @escaping (_ result: [StudentInformation]?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+    func getStudentInfo(url: String, completionHandlerForPOST: @escaping (_ result: [Results]?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         var request = URLRequest(url: URL(string: url)!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
@@ -45,18 +45,18 @@ class UdacityClient: NSObject{
                 sendError("No data was returned by the request!")
                 return
             }
-            
-            
-            let parsedResult: [String:AnyObject]!
+ 
+            let decoder = JSONDecoder()
+            let parsedResult: [String: [Results]]
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String:AnyObject]
+                parsedResult = try decoder.decode([String: [Results]].self, from: data)
             } catch {
                 sendError("Could not parse the data as JSON: '\(data)'")
                 return
             }
-            
-            if let personInfo = parsedResult!["results"] as? [[String:AnyObject]]{
-                let students = StudentInformation.studentsFromResults(personInfo)
+
+            if let personInfo = parsedResult["results"] {
+                let students = personInfo 
                 completionHandlerForPOST(students, nil)
             }else{
                 completionHandlerForPOST(nil, NSError(domain: "getStudentInfo parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse getStudentInfo"]))

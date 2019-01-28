@@ -50,7 +50,7 @@ class UdacityTableViewController: UITableViewController  {
             }
             
             if let students = students {
-                var myClass = [StudentInformation]()
+                var myClass = [Results]()
                 myClass = students
                 myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
                 DispatchQueue.main.async {
@@ -125,7 +125,7 @@ class UdacityTableViewController: UITableViewController  {
         
     }
     
-    func sendToWebView(_ studentInfo: StudentInformation) {
+    func sendToWebView(_ studentInfo: Results) {
         
         if canOpenURL(string: studentInfo.mediaURL!){
             

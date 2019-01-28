@@ -11,7 +11,7 @@ final class StudentInformationArray: NSObject{
     static let info = StudentInformationArray()
     private override init() {}
     var userName : String!
-    var studentList = [StudentInformation]()
+    var studentList = [Results]()
 }
 
 struct AppUtility {

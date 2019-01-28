@@ -37,7 +37,7 @@ class MapViewController: UIViewController {
         removePinCoordinates()
     }
     
-    func annotationFunc(list:[StudentInformation]) {
+    func annotationFunc(list:[Results]) {
         
         for item in list where item.latitude != nil  {
             if item.longitude != nil{
@@ -73,8 +73,7 @@ class MapViewController: UIViewController {
             }
             
             if let students = students {
-                var myClass = [StudentInformation]()
-                myClass = students
+              var  myClass = students
                 myClass = myClass.filter { $0.latitude != nil || $0.longitude != nil}
                 StudentInformationArray.info.studentList = myClass.compactMap{$0}
                 LoginViewController.removeSpinner(spinner: self.sv)
